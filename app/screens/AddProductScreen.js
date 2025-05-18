@@ -61,8 +61,7 @@ export default function AddProductScreen() {
                 <Text style={styles.cancelButtonText}>Anuluj</Text>
             </TouchableOpacity>
         </View>
-    )
-}
+    )};
 
 const styles = StyleSheet.create({
 

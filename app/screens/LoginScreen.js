@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
       fontWeight: "bold", 
       color: "#333"
    },
-
+   
   input:{ 
       borderWidth: 1, 
       borderColor: "#ddd", 

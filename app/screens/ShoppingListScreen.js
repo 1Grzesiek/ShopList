@@ -1,4 +1,4 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect, useRef} from "react";
 import { View, Text, SectionList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation, useRoute} from "@react-navigation/native";
@@ -10,47 +10,50 @@ export default function ShoppingListScreen() {
     const[minPrice, setMinPrice] = useState("");
     const[maxPrice, setMaxPrice] = useState("");
     const[selectedStore, setSelectedStore] = useState("");
+    const [loadedFromStorage, setLoadedFromStorage] = useState(false);
 
     const navigation = useNavigation();
     const route = useRoute();
-
-    const STORAGE_KEY = "PRODUCTS_LIST"
+    const lastAddedProductId = useRef(null);
+    const STORAGE_KEY = "PRODUCTS_LIST";
 
     const saveProducts = async (data) => {
-        try {
-            let json = JSON.stringify(data);
-            await AsyncStorage.setItem(STORAGE_KEY, json);
+        try {        
+            await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         } catch (error) {
             console.error("Błąd zapisu: ", error);
         }
-    }
+    };
 
     const loadProducts = async () => {
         try {
-            let json = await AsyncStorage.getItem(STORAGE_KEY);
-            if (json != null) {
-                setProducts(JSON.parse(json));
-            }
-        } catch (error) {
+            const json = await AsyncStorage.getItem(STORAGE_KEY);
+            if (json) setProducts(JSON.parse(json));
+            } catch (error) {
             console.error("Błąd odczytu: ", error);
+        } finally {
+            setLoadedFromStorage(true);
         }
     }
 
+     useEffect(() => {
+        loadProducts(); 
+    }, []);
+
     useEffect(() => {
+        if (!loadedFromStorage) return;
+
+        const newProduct = route.params?.newProduct;
+
+        if (newProduct && newProduct.id !== lastAddedProductId.current){
+            setProducts(prev => [...prev, newProduct]);
+            lastAddedProductId.current = newProduct.id;
+        }   
+    }, [route.params?.newProduct, navigation, loadedFromStorage]);
+
+     useEffect(() => {
         saveProducts(products); 
     }, [products]);
-
-    useEffect(() => {
-        loadProducts();
-
-        if (route.params?.newProduct) {
-            const product = route.params.newProduct;
-
-            setProducts((prev) => [...prev, product]);
-
-        navigation.setParams({ newProduct: undefined });
-    }
-    }, [route.params?.newProduct, navigation]);
 
     const stores = Array.from(new Set(products.map(product => product.store)));
 
@@ -67,12 +70,15 @@ export default function ShoppingListScreen() {
     };
 
     const getSections = () => {
-        const filtered = applyFilters();
-        return stores.map(store => ({
-            title: store,
-            data: filtered.filter(product => product.store === store)
-        }));
-    };
+    const filtered = applyFilters();
+
+    const uniqeStores = Array.from(new Set(filtered.map(p => p.store)));
+
+    return uniqeStores.map(store => ({
+        title: store,
+        data: filtered.filter(product => product.store === store)
+    }));
+};
 
     const togglePurchased = (id) => {
         setProducts((prev) =>
@@ -94,7 +100,6 @@ export default function ShoppingListScreen() {
         );
         setProducts(sorted);
     };
-
 
     return (
         <View style={styles.container}>
@@ -129,23 +134,6 @@ export default function ShoppingListScreen() {
             <TouchableOpacity style={styles.sortButton} onPress={sortProducts}>
                 <Text style={styles.sortButtonText}>Sortuj (kupione na końcu)</Text>
             </TouchableOpacity>
-
-        <TouchableOpacity 
-    style={{padding: 10, backgroundColor: '#eee'}}
-    onPress={async () => {
-        try {
-        const saved = await AsyncStorage.getItem(STORAGE_KEY);
-        const parsedData = JSON.parse(saved || '[]');
-        
-        alert(`Liczba zapisanych produktów: ${parsedData.length}\n\nPełne dane:\n${saved}`);
-        } catch (error) {
-        alert(`Błąd: ${error.message}`);
-        }
-    }}
-    >
-    <Text style={{color: 'blue'}}>🔍 Sprawdź zapisane dane</Text>
-    </TouchableOpacity>
-
             <SectionList
             sections={getSections()}
             keyExtractor={item => item.id.toString()}
@@ -272,7 +260,6 @@ export default function ShoppingListScreen() {
 
         deleteButton:{
             color: "red",
-            marginLeft: 10,
-            
+            marginLeft: 10,           
         },
     });
