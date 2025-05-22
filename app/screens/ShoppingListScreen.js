@@ -10,7 +10,7 @@ export default function ShoppingListScreen() {
     const[minPrice, setMinPrice] = useState("");
     const[maxPrice, setMaxPrice] = useState("");
     const[selectedStore, setSelectedStore] = useState("");
-    const [loadedFromStorage, setLoadedFromStorage] = useState(false);
+    const[loadedFromStorage, setLoadedFromStorage] = useState(false);
 
     const navigation = useNavigation();
     const route = useRoute();
@@ -72,11 +72,11 @@ export default function ShoppingListScreen() {
     const getSections = () => {
     const filtered = applyFilters();
 
-    return uniqeStores.map(store => ({
-        title: store,
-        data: filtered.filter(product => product.store === store)
-    }));
-};
+        return uniqeStores.map(store => ({
+            title: store,
+            data: filtered.filter(product => product.store === store)
+        }));
+    };
 
     const togglePurchased = (id) => {
         setProducts((prev) =>
@@ -164,6 +164,7 @@ export default function ShoppingListScreen() {
     )};
 
     const styles = StyleSheet.create({
+        
         container:{
             flex: 1,
             padding: 10,

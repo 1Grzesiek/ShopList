@@ -3,7 +3,6 @@ import { useNavigation} from "@react-navigation/native";
 
 export default function ProductInfoScreen({ route }) {
   const { product } = route.params;
-
   const navigation = useNavigation();
 
   // const edit = () => {
