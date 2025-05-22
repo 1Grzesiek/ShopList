@@ -6,9 +6,9 @@ export default function ProductInfoScreen({ route }) {
 
   const navigation = useNavigation();
 
-  const edit = () => {
+  // const edit = () => {
 
-  }
+  // }
 
   return (
     <View style={styles.container}>
@@ -24,9 +24,9 @@ export default function ProductInfoScreen({ route }) {
       <Text style={styles.label}>Opis:</Text>
       <Text style={styles.value}>{product.description || "Brak opisu"}</Text>
 
-      <TouchableOpacity style={styles.editButton} onPress={edit}>
+      {/* <TouchableOpacity style={styles.editButton} onPress={edit}>
         <Text style={styles.editButtonText}>Edytuj</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Powrót</Text>

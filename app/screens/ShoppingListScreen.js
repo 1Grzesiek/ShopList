@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef} from "react";
-import { View, Text, SectionList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
-import { useNavigation, useRoute} from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useEffect, useRef, useState } from "react";
+import { SectionList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from "@react-native-async-storage/async-storage"; 
 
 export default function ShoppingListScreen() {
     const[products, setProducts] = useState([]);
@@ -55,7 +55,7 @@ export default function ShoppingListScreen() {
         saveProducts(products); 
     }, [products]);
 
-    const stores = Array.from(new Set(products.map(product => product.store)));
+    const uniqeStores = Array.from(new Set(products.map(product => product.store)));
 
     const applyFilters = () => {
         return products.filter((product) => {
@@ -71,8 +71,6 @@ export default function ShoppingListScreen() {
 
     const getSections = () => {
     const filtered = applyFilters();
-
-    const uniqeStores = Array.from(new Set(filtered.map(p => p.store)));
 
     return uniqeStores.map(store => ({
         title: store,
@@ -125,7 +123,7 @@ export default function ShoppingListScreen() {
                 onValueChange={setSelectedStore}
                 >
                 <Picker.Item label="Wszystkie sklepy" value="" />
-                {stores.map(store => (
+                {uniqeStores.map(store => (
                     <Picker.Item key={store} label={store} value={store} />
                 ))}
                 </Picker>
