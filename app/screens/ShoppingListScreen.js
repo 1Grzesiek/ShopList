@@ -36,6 +36,7 @@ export default function ShoppingListScreen() {
         }
     }
 
+    
      useEffect(() => {
         loadProducts(); 
     }, []);
@@ -132,30 +133,42 @@ export default function ShoppingListScreen() {
             <TouchableOpacity style={styles.sortButton} onPress={sortProducts}>
                 <Text style={styles.sortButtonText}>Sortuj (kupione na końcu)</Text>
             </TouchableOpacity>
+
             <SectionList
-            sections={getSections()}
-            keyExtractor={item => item.id.toString()}
-            renderSectionHeader={({ section }) => (
-                <Text style={styles.sectionHeader}>{section.title}</Text>
-            )}
-            renderItem={({ item }) => (
-                <View style={styles.productRow}>
-                    <TouchableOpacity 
-                    style={styles.productCart}
-                    onPress={() => togglePurchased(item.id)}
-                    >
-                        <Text style={[styles.productName, item.purchased && styles.purchasedText]}>
-                            {item.name}
-                        </Text>
-                        <Text style={styles.price}>💰{item.price.toFixed(2)} zł</Text>
-                    </TouchableOpacity>
-                    <View style={styles.productButtons}>
-                    <TouchableOpacity onPress={() => navigation.navigate("ProductInfo", { product: item })}>
+                sections={getSections()}
+                keyExtractor={item => item.id.toString()}
+                renderSectionHeader={({ section }) => (
+                    <Text style={styles.sectionHeader}>{section.title}</Text>
+                )}
+                renderItem={({ item }) => (
+                    <View style={styles.productRow}>
+                        <TouchableOpacity 
+                            style={styles.productCart}
+                            onPress={() => togglePurchased(item.id)}>
+
+                            <Text style= {[styles.productName, item.purchased && styles.purchasedText]}>{item.name}</Text>
+                            <Text style={styles.price}>💰{item.price.toFixed(2)} zł</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.productButtons}>
+
+                        <TouchableOpacity 
+                            onPress={() => navigation.navigate("ProductInfo", { 
+                                product: item,
+                                onProductUpdate: (updatedProduct) => {
+                                setProducts(prev => prev.map(p => 
+                                    p.id === updatedProduct.id ? updatedProduct : p
+                                ))
+                                }
+                            })}
+                        >
                             <Icon name="info-outline" size={40}  style={styles.infoButton} />
                         </TouchableOpacity>
+
                         <TouchableOpacity onPress={() => removeProduct(item.id)}>
                             <Icon name="close" size={40}  style={styles.deleteButton} />
                         </TouchableOpacity>
+                        
                     </View>        
                 </View>
                 )}
@@ -164,7 +177,7 @@ export default function ShoppingListScreen() {
     )};
 
     const styles = StyleSheet.create({
-        
+
         container:{
             flex: 1,
             padding: 10,

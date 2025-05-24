@@ -1,13 +1,17 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation} from "@react-navigation/native";
+import { useNavigation, useRoute} from "@react-navigation/native";
 
-export default function ProductInfoScreen({ route }) {
-  const { product } = route.params;
+export default function ProductInfoScreen() {
+ const route = useRoute();
   const navigation = useNavigation();
+  const { product, onProductUpdate } = route.params;
 
-  // const edit = () => {
-
-  // }
+  const edit = () => {
+    navigation.navigate('EditProduct', {
+      product: product,
+      onSave: onProductUpdate 
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -23,9 +27,9 @@ export default function ProductInfoScreen({ route }) {
       <Text style={styles.label}>Opis:</Text>
       <Text style={styles.value}>{product.description || "Brak opisu"}</Text>
 
-      {/* <TouchableOpacity style={styles.editButton} onPress={edit}>
+      <TouchableOpacity style={styles.editButton} onPress={edit}>
         <Text style={styles.editButtonText}>Edytuj</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>Powrót</Text>

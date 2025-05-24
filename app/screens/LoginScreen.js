@@ -50,7 +50,7 @@ export default function LoginScreen({ navigation, setIsLoggedIn }) {
 }
 
 const styles = StyleSheet.create({
-  
+
   container: {
     flex: 1,
     justifyContent: "center",
