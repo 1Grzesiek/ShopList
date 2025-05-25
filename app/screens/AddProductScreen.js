@@ -57,7 +57,7 @@ export default function AddProductScreen() {
                 <Text style={styles.addButtonText}>Dodaj Produkt</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.cancelButton}onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={styles.cancelButton} onPress={ () => navigation.goBack()}>
                 <Text style={styles.cancelButtonText}>Anuluj</Text>
             </TouchableOpacity>
         </View>

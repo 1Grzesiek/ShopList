@@ -1,15 +1,15 @@
-import { TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useState, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "../screens/LoginScreen";
-import AddProductScreen from "../screens/AddProductScreen";
-import ProductInfoScreen from "../screens/ProductInfoScreen";
-import ShoppingListScreen from "../screens/ShoppingListScreen";
-import RegisterScreen from "../screens/RegisterScreen";
-import EditProductScreen from "../screens/EditProductScreen"
-import NotificationsScreen from "../screens/NotificationScreen";
+import { useEffect, useState } from "react";
+import { TouchableOpacity, View } from "react-native";
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AddProductScreen from "../screens/AddProductScreen";
+import EditProductScreen from "../screens/EditProductScreen";
+import LoginScreen from "../screens/LoginScreen";
+import NotificationsScreen from "../screens/NotificationScreen";
+import ProductInfoScreen from "../screens/ProductInfoScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import ShoppingListScreen from "../screens/ShoppingListScreen";
 
 const Stack = createNativeStackNavigator();
 
