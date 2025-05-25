@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+
 
 export default function EditProductScreen({ route, navigation }) {
   const { product,} = route.params;
   const [editedProduct, setEditedProduct] = useState({ ...product });
-
+  //dodanie potwierdzenia zapisu
   const handleSave = () => {
-   if (route.params.onSave) {
-      route.params.onSave(editedProduct); 
-    }
-    navigation.navigate("HomeScreen");
-  };
+    Alert.alert(
+      "Potwierdzenie",
+      "Czy na pewno chcesz zapisać zmiany?",
+        [
+          {text: "Anuluj", styles: "cancel"},
+          {text: "Tak", onPress: () => {
+            if (route.params.onSave) {
+              route.params.onSave(editedProduct); 
+            }
+          navigation.navigate("HomeScreen");
+          }
+        },
+      ]
+    )
+  }
+   
 
   return (
     <View style={styles.container}>
@@ -24,7 +36,7 @@ export default function EditProductScreen({ route, navigation }) {
       <Text style={styles.label}>Cena (zł):</Text>
       <TextInput
         style={styles.input}
-        value={editedProduct.price.toString()}
+        value={editedProduct.price?.toString() || ''} //dodanie walidacji typu ceny
         onChangeText={(text) => setEditedProduct({...editedProduct, price: text.replace(/[^0-9.]/g, '')})}
         keyboardType="numeric"
       />

@@ -15,27 +15,82 @@ export default function ProductInfoScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Nazwa:</Text>
-      <Text style={styles.value}>{product.name}</Text>
+      
+      <Text
+        style={styles.label}
+        accessibilityRole="text"
+        accessibilityLabel="Etykieta nazwa"
+      >
+        Nazwa:
+      </Text>
+      <Text
+        style={styles.value}
+        accessibilityLabel={`Nazwa produktu: ${product.name}`}
+      >
+        {product.name}
+      </Text>
 
-      <Text style={styles.label}>Cena:</Text>
-      <Text style={styles.value}>{product.price} zł</Text>
+      <Text
+        style={styles.label}
+        accessibilityRole="text"
+        accessibilityLabel="Etykieta cena"
+      >
+        Cena:
+      </Text>
+      <Text
+        style={styles.value}
+        accessibilityLabel={`Cena produktu: ${product.price} zł`}
+      >
+        {product.price} zł
+      </Text>
 
-      <Text style={styles.label}>Sklep:</Text>
-      <Text style={styles.value}>{product.store}</Text>
+      <Text
+        style={styles.label}
+        accessibilityRole="text"
+        accessibilityLabel="Etykieta sklep"
+      >
+        Sklep:
+      </Text>
+      <Text
+        style={styles.value}
+        accessibilityLabel={`Sklep: ${product.store}`}
+      >
+        {product.store}
+      </Text>
 
-      <Text style={styles.label}>Opis:</Text>
-      <Text style={styles.value}>{product.description || "Brak opisu"}</Text>
+      <Text
+        style={styles.label}
+        accessibilityRole="text"
+        accessibilityLabel="Etykieta opis"
+      >
+        Opis:
+      </Text>
+      <Text
+        style={styles.value}
+        accessibilityLabel={`Opis: ${product.description || "Brak opisu"}`}
+      >
+        {product.description || "Brak opisu"}
+      </Text>
 
-      <TouchableOpacity style={styles.editButton} onPress={edit}>
+      <TouchableOpacity
+        style={styles.editButton}
+        onPress={edit}
+        accessibilityRole="button"
+        accessibilityLabel="Przycisk edytuj"
+        accessibilityHint="Edytuj dane produktu"
+      >
         <Text style={styles.editButtonText}>Edytuj</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+        accessibilityRole="button"
+        accessibilityLabel="Przycisk powrót"
+        accessibilityHint="Powrót do poprzedniego ekranu"
+      >
         <Text style={styles.backButtonText}>Powrót</Text>
       </TouchableOpacity>
-
-      
     </View>
   );
 }

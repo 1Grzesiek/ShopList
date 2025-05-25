@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ProductFilters from '../components/ProductFilters';
 import ProductList from '../components/ProductList';
@@ -16,6 +16,8 @@ export default function ShoppingListScreen() {
   const route = useRoute();
   const lastAddedProductId = useRef(null);
   const STORAGE_KEY = 'PRODUCTS_LIST';
+
+  
 
   const saveProducts = async (data) => {
     try {
@@ -54,29 +56,31 @@ export default function ShoppingListScreen() {
   useEffect(() => {
     saveProducts(products);
   }, [products]);
+  //dodanie walidacji danych 
+  const validatePrice = (price) => {
+      const num = parseFloat(price);
+      return !isNaN(num) && num >= 0
+  }
 
   const uniqueStores = Array.from(new Set(products.map((product) => product.store)));
+  // applyFilters i getSections zbite w jedna funkcje uzywajaca useMemo
+  const filteredSections = useMemo(() => {
+    const filtered = products.filter((product) => {
 
-  const applyFilters = () => {
-    return products.filter((product) => {
       const priceRange =
-        (!minPrice || product.price >= parseFloat(minPrice)) &&
-        (!maxPrice || product.price <= parseFloat(maxPrice));
+        (!minPrice || validatePrice(minPrice) && product.price >= parseFloat(minPrice)) &&
+        (!maxPrice || validatePrice(maxPrice) && product.price <= parseFloat(maxPrice));
 
       const storeMatch = !selectedStore || product.store === selectedStore;
 
       return priceRange && storeMatch;
     });
-  };
 
-  const getSections = () => {
-    const filtered = applyFilters();
-
-    return uniqueStores.map((store) => ({
-      title: store,
-      data: filtered.filter((product) => product.store === store),
-    }));
-  };
+      return uniqueStores.map((store) => ({
+        title: store,
+        data: filtered.filter((product) => product.store === store),
+      }));
+    }, [products, minPrice, maxPrice, selectedStore, uniqueStores]);
 
   const togglePurchased = (id) => {
     setProducts((prev) =>
@@ -109,7 +113,7 @@ export default function ShoppingListScreen() {
       },
     });
   };
-
+  //Podzial na komponenty(ProductFilters, ProductItem, ProductList)
   return (
     <View style={styles.container}>
       <ProductFilters
@@ -123,7 +127,7 @@ export default function ShoppingListScreen() {
       />
 
       <ProductList
-        sections={getSections()}
+        sections={filteredSections}
         onTogglePurchased={togglePurchased}
         onRemove={removeProduct}
         onNavigateToInfo={handleNavigateToInfo}

@@ -8,12 +8,21 @@ export default function AddProductScreen() {
     const [store, setStore] = useState("");
     const [description, setDescription] = useState("");
     const navigation = useNavigation();
+    //dodanie walidacji
+    const validatePrice = (price) => {
+        const num = parseFloat(price);
+        return !isNaN(num) && num > 0;
+    };
 
     const addProduct = () => {
         if (!name || !price || !store){
             Alert.alert("Błąd, uzupełnij wszystkie pola!");
-            return;
-        }
+        return;
+       }else if(!validatePrice(price)) {
+            Alert.alert("Błąd", "Cena musi być dodatnią liczbą.");
+        return;
+       }
+
         const newProduct = {
             id: Date.now(),
             name,
@@ -22,8 +31,12 @@ export default function AddProductScreen() {
             description,
             purchased: false,
         };
-
-        navigation.navigate("HomeScreen", { newProduct})
+        //Dodanie potwierdzenia dodania produktu
+        Alert.alert("Sukces", "Dodano produkt",  [{
+            text: "OK",
+            onPress: () => navigation.navigate("HomeScreen", { newProduct})
+            }
+        ]);
     };
 
     return (

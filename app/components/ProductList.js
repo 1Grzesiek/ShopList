@@ -10,7 +10,13 @@ export default function ProductList ({
 }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.sortButton} onPress={onSort}>
+      <TouchableOpacity
+        style={styles.sortButton}
+        onPress={onSort}
+        accessibilityRole="button"
+        accessibilityLabel="Przycisk sortowania"
+        accessibilityHint="Sortuj produkty tak, aby kupione były na końcu listy"
+      >
         <Text style={styles.sortButtonText}>Sortuj (kupione na końcu)</Text>
       </TouchableOpacity>
 
@@ -18,7 +24,13 @@ export default function ProductList ({
         sections={sections}
         keyExtractor={(item) => item.id.toString()}
         renderSectionHeader={({ section }) => (
-          <Text style={styles.sectionHeader}>{section.title}</Text>
+          <Text
+            style={styles.sectionHeader}
+            accessibilityRole="header"
+            accessibilityLabel={`Sekcja: ${section.title}`}
+          >
+            {section.title}
+          </Text>
         )}
         renderItem={({ item }) => (
           <ProductItem
@@ -28,6 +40,8 @@ export default function ProductList ({
             onNavigateToInfo={onNavigateToInfo}
           />
         )}
+        accessibilityLabel="Lista produktów"
+        accessibilityHint="Lista zawierająca produkty pogrupowane według sklepów"
       />
     </View>
   );

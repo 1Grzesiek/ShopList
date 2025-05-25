@@ -19,6 +19,8 @@ export default function ProductFilters ({
           keyboardType="numeric"
           value={minPrice}
           onChangeText={onMinPriceChange}
+          accessibilityLabel="Minimalna cena"
+          accessibilityHint="Wprowadź minimalną cenę produktu"
         />
         <TextInput
           style={styles.filterInput}
@@ -26,14 +28,26 @@ export default function ProductFilters ({
           keyboardType="numeric"
           value={maxPrice}
           onChangeText={onMaxPriceChange}
+          accessibilityLabel="Maksymalna cena"
+          accessibilityHint="Wprowadź maksymalną cenę produktu"
         />
       </View>
 
       <View style={styles.pickerContainer}>
-        <Picker selectedValue={selectedStore} onValueChange={onStoreChange}>
+        <Picker
+          selectedValue={selectedStore}
+          onValueChange={onStoreChange}
+          accessibilityLabel="Wybierz sklep"
+          accessibilityHint="Filtruj produkty według sklepu"
+        >
           <Picker.Item label="Wszystkie sklepy" value="" />
           {uniqueStores.map((store) => (
-            <Picker.Item key={store} label={store} value={store} />
+            <Picker.Item
+              key={store}
+              label={store}
+              value={store}
+              accessibilityLabel={`Sklep ${store}`}
+            />
           ))}
         </Picker>
       </View>

@@ -1,38 +1,23 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
 import { TouchableOpacity, View } from "react-native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 import AddProductScreen from "../screens/AddProductScreen";
 import EditProductScreen from "../screens/EditProductScreen";
+import LoadingScreen from "../screens/LoadingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import NotificationsScreen from "../screens/NotificationScreen";
 import ProductInfoScreen from "../screens/ProductInfoScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ShoppingListScreen from "../screens/ShoppingListScreen";
+import { useAuth } from "../services/AuthService";
 
 const Stack = createNativeStackNavigator();
 
-const useAuthCheck = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
+export default function AppNavigator() {
+  const { isLoggedIn, isChecking, login, logout } = useAuth();
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const value = await AsyncStorage.getItem("LOGGED_IN");
-      setIsLoggedIn(value === "true");
-      setIsChecking(false);
-    };
-    checkLoginStatus();
-  }, []);
-
-  return { isLoggedIn, isChecking, setIsLoggedIn };
-};
-
-export default function AuthNavigator()  {
-  const { isLoggedIn, isChecking, setIsLoggedIn } = useAuthCheck();
-
-  if (isChecking) return null;
+  if (isChecking) return <LoadingScreen />;
 
   if (isLoggedIn) {
     return (
@@ -48,27 +33,24 @@ export default function AuthNavigator()  {
           options={({ navigation }) => ({
             title: "Do kupienia:",
             headerLeft: () => (
-              <TouchableOpacity
-                onPress={async () => {
-                  await AsyncStorage.setItem("LOGGED_IN", "false");
-                  setIsLoggedIn(false);
-                }}
-                style={{ marginLeft: 10 }}
-              >
+              <TouchableOpacity onPress={logout} style={{ marginLeft: 10 }}>
                 <Icon name="logout" size={35} color="#ff3b30" />
               </TouchableOpacity>
             ),
             headerRight: () => (
-              <View style={{ flexDirection: "row", marginRight: 10, }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginRight: 10,
+                }}
+              >
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Notifications")} 
+                  onPress={() => navigation.navigate("Notifications")}
                   style={{ marginRight: 15 }}
                 >
                   <Icon name="notifications" size={35} color="#3498db" />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("AddProduct")}
-                >
+                <TouchableOpacity onPress={() => navigation.navigate("AddProduct")}>
                   <Icon name="add-circle-outline" size={35} color="#27ae60" />
                 </TouchableOpacity>
               </View>
@@ -76,9 +58,9 @@ export default function AuthNavigator()  {
           })}
         />
         <Stack.Screen
-        name="EditProduct"
-        component={EditProductScreen}
-        options={{ title: "Edytuj produkt" }}
+          name="EditProduct"
+          component={EditProductScreen}
+          options={{ title: "Edytuj produkt" }}
         />
         <Stack.Screen
           name="Notifications"
@@ -108,14 +90,11 @@ export default function AuthNavigator()  {
       }}
     >
       <Stack.Screen name="LoginScreen">
-        {(props) => <LoginScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+        {(props) => <LoginScreen {...props} onLogin={login} />}
       </Stack.Screen>
-      
-      <Stack.Screen
-        name="RegisterScreen"
-        component={RegisterScreen}
-      />
+
+      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
     </Stack.Navigator>
   );
-};
+}
 
