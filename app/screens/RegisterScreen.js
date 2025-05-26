@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Crypto from 'expo-crypto';
 
 export default function RegisterScreen({ navigation }) {
   const [login, setLogin] = useState("");
@@ -36,8 +37,13 @@ export default function RegisterScreen({ navigation }) {
         Alert.alert("Użytkownik już istnieje");
         return;
       }
+      //dodanie funkcji hashujacej hasło
+      const hashedPassword = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        password
+      )
 
-      users.push({ login, password });
+      users.push({ login, password: hashedPassword });
 
       await AsyncStorage.setItem("USERS", JSON.stringify(users));
       Alert.alert("Zarejestrowano!", "", [{ text: "OK", onPress: () => navigation.navigate("LoginScreen") }]);

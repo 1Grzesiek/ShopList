@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import * as Crypto from 'expo-crypto';
 
 export default function LoginScreen({ navigation, onLogin }) {
   const [login, setLogin] = useState("");
@@ -22,8 +23,13 @@ export default function LoginScreen({ navigation, onLogin }) {
       try {
         const usersJson = await AsyncStorage.getItem("USERS");
         const users = usersJson ? JSON.parse(usersJson) : [];
+        //dodanie obsługi porownywania hashowanych haseł
+        const hashedInputPassword = await Crypto.digestStringAsync(
+          Crypto.CryptoDigestAlgorithm.SHA256,
+          password
+        );
 
-        const user = users.find(u => u.login === login && u.password === password);
+        const user = users.find(u => u.login === login && u.password === hashedInputPassword);
 
         if (user) {
           await AsyncStorage.setItem("LOGGED_IN", "true");          
