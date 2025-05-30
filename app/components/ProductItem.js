@@ -60,29 +60,36 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 5,
   },
+
   productCart: {
     flex: 1,
   },
+
   productName: {
     fontSize: 15,
     color: '#333',
   },
+
   purchasedText: {
     textDecorationLine: 'line-through',
     color: 'gray',
   },
+
   price: {
     fontSize: 12,
     color: '#333',
   },
+
   productButtons: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
+
   infoButton: {
     color: '#007aff',
   },
+  
   deleteButton: {
     color: 'red',
     marginLeft: 10,

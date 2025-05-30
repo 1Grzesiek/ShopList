@@ -59,11 +59,13 @@ const styles = StyleSheet.create({
   filterContainer: {
     marginBottom: 10,
   },
+
   filteredContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
   },
+
   filterInput: {
     flex: 1,
     marginHorizontal: 2,
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
   },
+  
   pickerContainer: {
     backgroundColor: '#fff',
     borderRadius: 5,

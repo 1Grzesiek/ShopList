@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+
   sortButton: {
     backgroundColor: '#007aff',
     borderRadius: 5,
@@ -59,15 +60,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
+
   sortButtonText: {
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
   },
+
   sectionHeader: {
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 5,
   },
+  
 });
 
