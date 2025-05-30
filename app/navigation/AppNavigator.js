@@ -1,4 +1,3 @@
-import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";

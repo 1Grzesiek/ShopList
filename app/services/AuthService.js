@@ -1,6 +1,40 @@
-import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
+import * as Crypto from "expo-crypto";
+
+//logoawnie
+export async function loginUser(login, password) {
+  const usersJson = await AsyncStorage.getItem("USERS");
+  const users = usersJson ? JSON.parse(usersJson) : [];
+
+  const hashedInputPassword = await Crypto.digestStringAsync(
+            Crypto.CryptoDigestAlgorithm.SHA256,
+            password
+          );
+  const user = users.find(u => u.login === login && u.password === hashedInputPassword);
+
+  if (!user) {
+    throw new Error("Błędny login lub hasło");
+  }
+};
+//rejestracja
+export async function registerUser(login, password) {
+  const usersJson = await AsyncStorage.getItem("USERS");
+  const users = usersJson ? JSON.parse(usersJson) : [];
+
+  const userExists = users.find(u => u.login === login);
+  if (userExists) {
+    throw new Error("Użytkownik już istnieje");
+  }
+
+  const hashedPassword = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    password
+  );
+
+  users.push({ login, password: hashedPassword });
+  await AsyncStorage.setItem("USERS", JSON.stringify(users));
+};
 
 export function useAuth() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

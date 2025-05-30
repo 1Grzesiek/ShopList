@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
-import * as Crypto from 'expo-crypto';
+import { loginUser } from "../services/AuthService"; 
 
 export default function LoginScreen({ navigation, onLogin }) {
   const [login, setLogin] = useState("");
@@ -19,29 +19,15 @@ export default function LoginScreen({ navigation, onLogin }) {
       Alert.alert("Hasło musi mieć co najmniej 6 znaków");
       return;
     }
-
       try {
-        const usersJson = await AsyncStorage.getItem("USERS");
-        const users = usersJson ? JSON.parse(usersJson) : [];
-        //dodanie obsługi porownywania hashowanych haseł
-        const hashedInputPassword = await Crypto.digestStringAsync(
-          Crypto.CryptoDigestAlgorithm.SHA256,
-          password
-        );
-
-        const user = users.find(u => u.login === login && u.password === hashedInputPassword);
-
-        if (user) {
-          await AsyncStorage.setItem("LOGGED_IN", "true");          
-          onLogin();
-        } else {
-          Alert.alert("Błędny login lub hasło");
-        }
+        await loginUser(login, password);
+        await AsyncStorage.setItem("LOGGED_IN", "true");
+        onLogin();
       } catch (error) {
         console.error("Błąd logowania:", error);
-        Alert.alert("Błąd logowania");
+        Alert.alert("Błędny login lub hasło");
       }
-  };
+    };
   //Dodanie accesibility label i hint dla osob z niepelnosprawnosciami
   return (
     <View style={styles.container}>
